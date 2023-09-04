@@ -1,50 +1,106 @@
-<script setup></script>
-
 <template>
-    <header>
-        <img
-            alt="Vue logo"
-            class="logo"
-            src="./assets/logo.svg"
-            width="125"
-            height="125"
-        />
+    <keep-alive>
+        <component
+            v-bind:is="componentName"
+            v-bind:componentName="componentName"
+        >
+            <template v-slot:admin-login>
+                <a href="#" class="admin-login" v-on:click="gotoLogin"
+                    >管理员登陆</a
+                >
+            </template>
 
-        <div class="wrapper">
-            <HelloWorld msg="You did it!" />
-        </div>
-    </header>
+            <template v-slot:issue-query>
+                <a href="#" class="issue-query" v-on:click="gotoQuery"
+                    >工单查询</a
+                >
+            </template>
 
-    <main>
-        <TheWelcome />
-    </main>
+            <template v-slot:history>
+                <a href="#" class="history" v-on:click="gotoHistory"
+                    >历史工单</a
+                >
+            </template>
+
+            <template v-slot:home-title>
+                <h1>问题反馈</h1>
+            </template>
+        </component>
+    </keep-alive>
 </template>
 
-<style scoped>
-header {
-    line-height: 1.5;
+<script>
+import Home from "@/components/Home.vue";
+import History from "@/components/History.vue";
+import Query from "@/components/Query.vue";
+
+export default {
+    name: "App",
+    data() {
+        return {
+            componentName: "Home",
+        };
+    },
+
+    components: {
+        Home,
+        History,
+        Query,
+    },
+
+    methods: {
+        gotoLogin() {
+            this.componentName = "Admin";
+        },
+
+        gotoQuery() {
+            this.componentName = "Query";
+        },
+
+        gotoHistory() {
+            this.componentName = "History";
+        },
+    },
+};
+</script>
+
+<style>
+* {
+    text-align: center;
 }
 
-.logo {
-    display: block;
-    margin: 0 auto 2rem;
+input[type="text"] {
+    appearance: none;
+    margin-bottom: 20px;
+    border: none;
+    outline: none;
+    border-bottom: 0.2em solid #e91e63;
+    background: rgba(#e91e63, 0.2);
+    border-radius: 0.2em 0.2em 0 0;
+    padding: 0.4em;
+    color: #e91e63;
 }
 
-@media (min-width: 1024px) {
-    header {
-        display: flex;
-        place-items: center;
-        padding-right: calc(var(--section-gap) / 2);
-    }
+img {
+    width: 50%;
+    height: auto;
+}
 
-    .logo {
-        margin: 0 2rem 0 0;
-    }
+button {
+    appearance: none;
+    border: 0.2em solid #e91e63;
+    background: hsl(0 0 0/0);
+    padding: 0.85em 1.5em;
+    color: #e91e63;
+    border-radius: 2em;
+    transition: 1s;
+    width: 40%;
+}
 
-    header .wrapper {
-        display: flex;
-        place-items: flex-start;
-        flex-wrap: wrap;
-    }
+button:hover,
+button:focus,
+button:active {
+    background: #e91e63;
+    color: #fff;
 }
 </style>

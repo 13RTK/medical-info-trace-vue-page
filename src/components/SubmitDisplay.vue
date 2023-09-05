@@ -22,7 +22,7 @@
 
     <div v-else class="response">
         <nav>
-            <a href="#" class="link">回到主页</a>
+            <slot name="goHome" class="link"></slot>
             |
             <slot name="issue-query" class="link"></slot>
             |
@@ -42,15 +42,11 @@ export default {
             remotePath: "http://116.62.152.170:8080/api/v1/issue",
             isComfirmed: false,
             responseDataId: 0,
-            responseList: [],
         };
     },
     props: {
         issueObj: {
             type: Object,
-        },
-        componentName: {
-            type: String,
         },
     },
     emits: ["cancel-submit"],
@@ -78,7 +74,6 @@ export default {
             );
 
             // Post data
-            // try {
             const response = await fetch(this.remotePath, {
                 method: "POST",
                 body: formData,
@@ -107,10 +102,6 @@ export default {
 
             // Set isComfirmed
             this.isComfirmed = true;
-            // } catch (error) {
-            //     console.log(error);
-            //     return false;
-            // }
         },
 
         saveIssueHistory(responseData) {
@@ -130,10 +121,6 @@ export default {
                 );
             }
         },
-
-        // linkJump() {
-        //     this.$emit("link-jump");
-        // },
     },
 };
 </script>

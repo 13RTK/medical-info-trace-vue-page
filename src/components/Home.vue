@@ -1,11 +1,11 @@
 <template>
-    <div v-if="!isSubmitted" class="container">
+    <div class="container">
         <nav>
             <slot name="admin-login" class="link"></slot> |
             <slot name="issue-query" class="link"></slot> |
             <slot name="history" class="link"></slot>
         </nav>
-        <slot name="home-title"></slot>
+        <slot name="title"></slot>
 
         <div enctype="multipart/form-data" class="form">
             <br />
@@ -39,40 +39,15 @@
             <br />
             <br />
 
-            <input type="button" value="上传" v-on:click.prevent="upload" />
+            <input type="button" value="上传" @click.prevent="upload" />
         </div>
     </div>
-    <submit-display
-        v-else
-        v-bind:issueObj="issueObj"
-        v-on:cancel-submit="cancalSubmit"
-        v-bind:componentName="componentName"
-        v-on:back-home="switchComponent($event)"
-    >
-        <template v-slot:admin-login>
-            <a href="#" class="admin-login">管理员登陆</a>
-        </template>
-
-        <template v-slot:issue-query>
-            <a href="#" class="issue-query">工单查询</a>
-        </template>
-
-        <template v-slot:history>
-            <a href="#" class="history">历史工单</a>
-        </template>
-
-        <template v-slot:uploaded-title>
-            <h1>提交成功</h1>
-        </template>
-    </submit-display>
 </template>
 
 <script>
-import SubmitDisplay from "./SubmitDisplay.vue";
-
 export default {
     name: "Home",
-    props: ["componentName"],
+    emits: ["upload-issue"],
     data() {
         return {
             poster: "",
@@ -98,6 +73,7 @@ export default {
             this.imageLableText = "点击更换图片";
         },
 
+        // Check the input and pass the upload issue to root componenet
         upload() {
             console.log("upload called");
 
@@ -121,30 +97,14 @@ export default {
                 return;
             }
 
-            this.isSubmitted = true;
             this.issueObj = {
                 desc: this.desc,
                 poster: this.poster,
                 imageURL: this.imageURL,
                 file: this.file,
             };
+            this.$emit("upload-issue", this.issueObj);
         },
-
-        cancalSubmit() {
-            this.isSubmitted = false;
-        },
-
-        switchComponent(event) {
-            const target = event.target;
-
-            console.log(event);
-            console.log(event.name);
-            console.log(target);
-        },
-    },
-
-    components: {
-        SubmitDisplay,
     },
 };
 </script>

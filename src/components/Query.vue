@@ -20,12 +20,10 @@
     </div>
 
     <div v-else>
-        <nav>
+        <nav @click="resetQuery">
             <slot name="goHome" class="link"></slot>
             |
-            <a href="#" class="issue-query" @click.prevent="resetQuery"
-                >工单查询</a
-            >
+            <a href="#" class="issue-query">工单查询</a>
             |
             <slot name="history" class="link"></slot>
         </nav>
@@ -44,7 +42,7 @@ export default {
         return {
             queryId: "",
             localPath: "http://127.0.0.1:8080/api/v1/issue",
-            remotePath: "http://116.62.152.170:8080/api/v1/issue",
+            remotePath: "http://110.40.154.138:8080/api/v1/issue",
             isQueried: false,
             isQuering: false,
 
@@ -78,6 +76,7 @@ export default {
         },
 
         resetQuery() {
+            console.log("reset query called");
             this.isQueried = false;
             this.queryId = "";
             this.isQuering = false;

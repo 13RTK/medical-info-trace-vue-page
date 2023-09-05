@@ -15,7 +15,7 @@
         </div>
         <div>
             <ul v-for="issue in historyArr">
-                <ul v-for="(item, index) in issue">
+                <ul v-for="item in issue">
                     <li>{{ item[0] }} : {{ item[1] }}</li>
                 </ul>
                 <br />
@@ -32,7 +32,7 @@ export default {
         return {
             historyArr: [],
             localPath: "http://127.0.0.1:8080/api/v1/issue",
-            remotePath: "http://116.62.152.170:8080/api/v1/issue",
+            remotePath: "http://110.40.154.138:8080/api/v1/issue",
             isQueried: false,
         };
     },

@@ -93,6 +93,32 @@
                 <h1>历史工单</h1>
             </template>
         </component>
+
+        <component
+            :is="componentName"
+            :renderIssue="renderIssue"
+            v-else-if="componentName === 'Admin'"
+        >
+            <template v-slot:goHome>
+                <a href="#" class="go-home" @click="gotoHome">回到主页</a>
+            </template>
+
+            <template v-slot:issue-query>
+                <a href="#" class="issue-query" @click.prevent="gotoQuery"
+                    >工单查询</a
+                >
+            </template>
+
+            <template v-slot:history>
+                <a href="#" class="history" @click.prevent="gotoHistory"
+                    >历史工单</a
+                >
+            </template>
+
+            <template v-slot:title>
+                <h1>请登录</h1>
+            </template>
+        </component>
     </keep-alive>
 </template>
 

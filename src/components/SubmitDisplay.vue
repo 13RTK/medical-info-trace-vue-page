@@ -39,7 +39,7 @@ export default {
     data() {
         return {
             localPath: "http://127.0.0.1:8080/api/v1/issue",
-            remotePath: "http://116.62.152.170:8080/api/v1/issue",
+            remotePath: "http://110.40.154.138:8080/api/v1/issue",
             isComfirmed: false,
             responseDataId: 0,
         };

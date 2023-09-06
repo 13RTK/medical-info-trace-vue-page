@@ -21,7 +21,7 @@
     </div>
 
     <div v-else class="response">
-        <nav>
+        <nav @click.prevent="resetPage">
             <slot name="goHome" class="link"></slot>
             |
             <slot name="issue-query" class="link"></slot>
@@ -52,6 +52,10 @@ export default {
     emits: ["cancel-submit"],
 
     methods: {
+        resetPage() {
+            this.isComfirmed = false;
+        },
+
         cancel() {
             console.log("cancel called");
             this.$emit("cancel-submit");

@@ -71,10 +71,18 @@
                 <button @click.prevent="logout">退出登录</button>
                 <br />
 
-                <ul v-for="issue in staffIssueList">
-                    <ul v-for="item in renderIssue(issue)">
+                <ul v-for="issue in staffIssueList" class="staffIssueList">
+                    <div v-for="item in renderIssue(issue)">
                         <li>{{ item[0] }} : {{ item[1] }}</li>
-                    </ul>
+                        <button
+                            v-if="
+                                item[0] === '工单状态' && item[1] !== '已完成'
+                            "
+                            @click.prevent="completeIssue(issue.id)"
+                        >
+                            完成
+                        </button>
+                    </div>
                     <br />
                 </ul>
             </div>
@@ -123,6 +131,8 @@ export default {
             issueRemotePath: "http://110.40.154.138:8080/api/v1/issue",
             issueRemoteGetAllPath:
                 "http://110.40.154.138:8080/api/v1/issue-all",
+            issueRemoteCompletePath:
+                "http://110.40.154.138:8080/api/v1/issue-complete",
 
             staffLocalPath: "http://127.0.0.1:8080/api/v1/staff",
             staffRemotePath: "http://110.40.154.138:8080/api/v1/staff",
@@ -141,6 +151,23 @@ export default {
     },
 
     methods: {
+        async completeIssue(issueId) {
+            const response = await fetch(
+                `${this.issueRemoteCompletePath}?issueId=${issueId}`
+            );
+            if (!response.ok) {
+                alert("请勿重复完成工单!");
+            }
+
+            const responseData = await response.json();
+            if (responseData.status !== "success") {
+                alert("请勿重复完成工单!");
+            }
+
+            alert("完成工单！");
+            this.getStaffIssueList(this.staffId);
+        },
+
         cancelAssign() {
             this.assign = false;
         },
@@ -383,6 +410,7 @@ select {
 
 button {
     margin-bottom: 10px;
+    text-align: center;
 }
 
 li {
@@ -395,6 +423,10 @@ li {
 }
 
 .assign-page {
+    border-style: solid;
+}
+
+.staffIssueList {
     border-style: solid;
 }
 </style>

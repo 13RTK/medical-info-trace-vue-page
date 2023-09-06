@@ -57,6 +57,7 @@
         <component
             :is="componentName"
             :renderIssue="renderIssue"
+            :staffList="staffList"
             v-else-if="componentName === 'Query'"
         >
             <template v-slot:goHome>
@@ -135,6 +136,10 @@ export default {
         return {
             componentName: "Home",
             issueObj: null,
+            staffRemotePath: "http://110.40.154.138:8080/api/v1/staff",
+            staffRemoteGetAllPath:
+                "http://110.40.154.138:8080/api/v1/staff-all",
+            staffList: [],
         };
     },
 
@@ -147,12 +152,23 @@ export default {
     },
 
     methods: {
+        async getAllStaff() {
+            const response = await fetch(this.staffRemoteGetAllPath);
+            if (!response.ok) {
+                alert("获取员工列表失败！");
+            }
+
+            const responseData = await response.json();
+            this.staffList = responseData.data;
+        },
+
         gotoLogin() {
             this.componentName = "Admin";
         },
 
         gotoQuery() {
             this.componentName = "Query";
+            this.staffList = this.getAllStaff();
         },
 
         gotoHistory() {
@@ -173,6 +189,27 @@ export default {
             this.gotoHome();
         },
 
+        async getStaffNameById(staffId) {
+            if (staffId === null || !staffId) {
+                console.log("missing staffId!");
+                return;
+            }
+
+            const response = await fetch(
+                `${this.staffRemotePath}?staffId=${staffId}`
+            );
+            if (!response.ok) {
+                console.log("failed to fetch staff by id!");
+                return;
+            }
+
+            const responseData = await response.json();
+            const staff = await responseData.data.staff[0];
+            console.log(staff.staff_name);
+
+            return staff.staff_name;
+        },
+
         renderIssue(issueObj) {
             const stateMap = new Map([
                 ["wait", "等待处理"],
@@ -180,7 +217,7 @@ export default {
                 ["complete", "已完成"],
             ]);
 
-            return [...Object.entries(issueObj)]
+            const resArr = [...Object.entries(issueObj)]
                 .map((item) => {
                     if (item[0] === "id") {
                         return ["工单号", item[1]];
@@ -195,11 +232,31 @@ export default {
                             "创建时间",
                             item[1].slice(0, 10) + " " + item[1].slice(11, 19),
                         ];
+                    } else if (item[0] === "staffId") {
+                        const staffName =
+                            item[1] === null
+                                ? "无"
+                                : this.staffList.filter(
+                                      (staff) => staff.id === item[1]
+                                  )[0].staffName;
+
+                        return ["负责人", staffName];
+                    } else if (item[0] === "fixedDate") {
+                        return [
+                            "完成时间",
+                            item[1] === null
+                                ? "无"
+                                : item[1].slice(0, 10) +
+                                  " " +
+                                  item[1].slice(11, 19),
+                        ];
                     } else {
                         return [];
                     }
                 })
                 .filter((item) => item.length === 2);
+
+            return resArr;
         },
     },
 };

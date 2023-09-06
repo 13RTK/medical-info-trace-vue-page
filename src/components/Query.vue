@@ -37,7 +37,7 @@
 <script>
 export default {
     name: "Query",
-    props: ["renderIssue"],
+    props: ["renderIssue", "staffList"],
     data() {
         return {
             queryId: "",

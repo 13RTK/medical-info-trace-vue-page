@@ -39,6 +39,12 @@ export default {
 
     methods: {
         async fillIssueList() {
+            if (!window.localStorage.getItem("historyIssues")) {
+                this.historyArr = [];
+                this.isQueried = true;
+                return;
+            }
+
             const issueIdArr = JSON.parse(
                 window.localStorage.getItem("historyIssues")
             ).map((item) => item.issue[0]);

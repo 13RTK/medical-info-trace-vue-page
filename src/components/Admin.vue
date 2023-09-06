@@ -68,11 +68,24 @@
 
             <div v-else>
                 <h1>欢迎: {{ username }}</h1>
+                <button @click.prevent="logout">退出登录</button>
+                <br />
+
+                <ul v-for="issue in staffIssueList">
+                    <ul v-for="item in renderIssue(issue)">
+                        <li>{{ item[0] }} : {{ item[1] }}</li>
+                    </ul>
+                    <br />
+                </ul>
             </div>
         </div>
         <div v-else-if="assign">
             <h1>所有员工</h1>
-            <div v-for="staff in convertStaffList(staffList)">
+            <button @click.prevent="cancelAssign">取消</button>
+            <div
+                v-for="staff in convertStaffList(staffList)"
+                class="assign-page"
+            >
                 <div v-for="item in staff">
                     <li>{{ item[0] }} : {{ item[1] }}</li>
                 </div>
@@ -83,6 +96,7 @@
 </template>
 <script>
 export default {
+    props: ["renderIssue"],
     name: "Admin",
     data() {
         return {
@@ -100,6 +114,8 @@ export default {
             triedIssueList: false,
 
             staffList: [],
+            staffIssueList: [],
+            staffId: 0,
 
             filterState: "all",
 
@@ -113,6 +129,9 @@ export default {
             staffRemoteGetAllPath:
                 "http://110.40.154.138:8080/api/v1/staff-all",
 
+            staffRemoteIssuePath:
+                "http://110.40.154.138:8080/api/v1/staff-issue-all",
+
             stateMap: new Map([
                 ["wait", "等待处理"],
                 ["fixing", "处理中"],
@@ -122,6 +141,10 @@ export default {
     },
 
     methods: {
+        cancelAssign() {
+            this.assign = false;
+        },
+
         convertStaffList(staffList) {
             const mapedList = staffList.map((staff) => {
                 return [...Object.entries(staff)]
@@ -214,6 +237,7 @@ export default {
             const responseData = await response.json();
             this.isLogin = true;
             this.isAdmin = responseData.data.user.staffRole === "admin";
+            this.staffId = responseData.data.user.id;
             this.getAllStaff();
 
             if (this.isAdmin) {
@@ -305,7 +329,9 @@ export default {
             return resAdminIssue.filter((item) => item.length !== 0);
         },
 
-        renderStaffIssueList() {},
+        renderStaffIssueList() {
+            this.getStaffIssueList(this.staffId);
+        },
 
         async getAllStaff() {
             const response = await fetch(this.staffRemoteGetAllPath);
@@ -315,6 +341,23 @@ export default {
 
             const responseData = await response.json();
             this.staffList = responseData.data;
+        },
+
+        async getStaffIssueList(staffId) {
+            console.log("Enter getStaffIssueList");
+
+            const response = await fetch(
+                `${this.staffRemoteIssuePath}?staffId=${staffId}`
+            );
+            if (!response.ok) {
+                alert("获取工单列表失败!");
+                return;
+            }
+
+            const responseData = await response.json();
+            this.staffIssueList = responseData.data.issueList.filter(
+                (issue) => issue.id !== null
+            );
         },
     },
 };
@@ -344,9 +387,14 @@ button {
 
 li {
     text-align: left;
+    margin-left: 10px;
 }
 
 .single-issue {
+    border-style: solid;
+}
+
+.assign-page {
     border-style: solid;
 }
 </style>

@@ -34,12 +34,14 @@
 </template>
 
 <script>
+import { issueRemotePath } from "../../config.js";
+
 export default {
     name: "SubmitDisplay",
     data() {
         return {
             localPath: "http://127.0.0.1:8080/api/v1/issue",
-            remotePath: "http://110.40.154.138:8080/api/v1/issue",
+            issueRemotePath,
             isComfirmed: false,
             responseDataId: 0,
         };
@@ -78,7 +80,7 @@ export default {
             );
 
             // Post data
-            const response = await fetch(this.remotePath, {
+            const response = await fetch(this.issueRemotePath, {
                 method: "POST",
                 body: formData,
             });

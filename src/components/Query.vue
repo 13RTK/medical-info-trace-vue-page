@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { issueRemotePath } from "../../config.js";
+
 export default {
     name: "Query",
     props: ["renderIssue", "staffList"],
@@ -42,7 +44,7 @@ export default {
         return {
             queryId: "",
             localPath: "http://127.0.0.1:8080/api/v1/issue",
-            remotePath: "http://110.40.154.138:8080/api/v1/issue",
+            issueRemotePath,
             isQueried: false,
             isQuering: false,
 
@@ -61,7 +63,7 @@ export default {
             }
 
             const response = await fetch(
-                `${this.remotePath}?issueId=${this.queryId}`
+                `${this.issueRemotePath}?issueId=${this.queryId}`
             );
             if (!response.ok) {
                 alert("查询失败，请输入正确的工单号！!");

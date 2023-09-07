@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { issueRemotePath } from "../../config.js";
+
 export default {
     name: "History",
     props: ["renderIssue"],
@@ -32,7 +34,7 @@ export default {
         return {
             historyArr: [],
             localPath: "http://127.0.0.1:8080/api/v1/issue",
-            remotePath: "http://110.40.154.138:8080/api/v1/issue",
+            issueRemotePath,
             isQueried: false,
         };
     },
@@ -57,21 +59,24 @@ export default {
             }
 
             this.historyArr = this.historyArr.map((issue) => {
-                console.log(`issue: ${JSON.stringify(issue)}`);
-                return this.renderIssue(issue);
+                const renderedIssue = this.renderIssue(issue);
+                console.log(`renderedIssue: ${JSON.stringify(renderedIssue)}`);
+
+                return renderedIssue;
             });
 
             this.isQueried = true;
         },
 
         async queryIssueById(id) {
-            const response = await fetch(`${this.remotePath}?issueId=${id}`);
+            const response = await fetch(
+                `${this.issueRemotePath}?issueId=${id}`
+            );
             if (!response.ok) {
                 return null;
             }
 
             const responseData = await response.json();
-            console.log(`responseData: ${responseData}`);
             return responseData.data.issue;
         },
     },

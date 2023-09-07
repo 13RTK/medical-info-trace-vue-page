@@ -103,6 +103,15 @@
     </div>
 </template>
 <script>
+import {
+    issueRemotePath,
+    issueRemoteGetAllPath,
+    issueRemoteCompletePath,
+    staffRemotePath,
+    staffRemoteGetAllPath,
+    staffRemoteIssuePath,
+} from "../../config.js";
+
 export default {
     props: ["renderIssue"],
     name: "Admin",
@@ -128,19 +137,14 @@ export default {
             filterState: "all",
 
             issueLocalPath: "http://127.0.0.1:8080/api/v1/issue",
-            issueRemotePath: "http://110.40.154.138:8080/api/v1/issue",
-            issueRemoteGetAllPath:
-                "http://110.40.154.138:8080/api/v1/issue-all",
-            issueRemoteCompletePath:
-                "http://110.40.154.138:8080/api/v1/issue-complete",
+            issueRemotePath,
+            issueRemoteGetAllPath,
+            issueRemoteCompletePath,
 
             staffLocalPath: "http://127.0.0.1:8080/api/v1/staff",
-            staffRemotePath: "http://110.40.154.138:8080/api/v1/staff",
-            staffRemoteGetAllPath:
-                "http://110.40.154.138:8080/api/v1/staff-all",
-
-            staffRemoteIssuePath:
-                "http://110.40.154.138:8080/api/v1/staff-issue-all",
+            staffRemotePath,
+            staffRemoteGetAllPath,
+            staffRemoteIssuePath,
 
             stateMap: new Map([
                 ["wait", "等待处理"],

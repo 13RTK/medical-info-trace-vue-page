@@ -129,6 +129,7 @@ import History from "@/components/History.vue";
 import Query from "@/components/Query.vue";
 import SubmitDisplay from "@/components/SubmitDisplay.vue";
 import Admin from "@/components/Admin.vue";
+import { staffRemotePath, staffRemoteGetAllPath } from "../config.js";
 
 export default {
     name: "App",
@@ -136,9 +137,8 @@ export default {
         return {
             componentName: "Home",
             issueObj: null,
-            staffRemotePath: "http://110.40.154.138:8080/api/v1/staff",
-            staffRemoteGetAllPath:
-                "http://110.40.154.138:8080/api/v1/staff-all",
+            staffRemotePath,
+            staffRemoteGetAllPath,
             staffList: [],
         };
     },
@@ -173,6 +173,7 @@ export default {
 
         gotoHistory() {
             this.componentName = "History";
+            this.staffList = this.getAllStaff();
         },
 
         saveIssue(issueObj) {
